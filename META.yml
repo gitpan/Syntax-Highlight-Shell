@@ -1,0 +1,16 @@
+--- #YAML:1.0
+name: Syntax-Highlight-Shell
+version: 0.01
+author:
+  - |-
+    Sébastien Aperghis-Tramoni <sebastien@aperghis.net>
+abstract: Highlight shell commands
+license: perl
+requires:
+  Shell::Parser: 0
+  Test::More: 0
+provides:
+  Syntax::Highlight::Shell:
+    file: lib/Syntax/Highlight/Shell.pm
+    version: 0.01
+generated_by: Module::Build version 0.26
