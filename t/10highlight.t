@@ -18,15 +18,15 @@ HTML
 ## shebang
 is( $highlighter->parse("#!/bin/sh\n"), <<'HTML'              ); #03
 <pre>
-<span class="s-cmt">#!/bin/sh
-</span></pre>
+<span class="s-cmt">#!/bin/sh</span>
+</pre>
 HTML
 
 ## comment
 is( $highlighter->parse("# a comment\n"), <<'HTML'            ); #04
 <pre>
-<span class="s-cmt"># a comment
-</span></pre>
+<span class="s-cmt"># a comment</span>
+</pre>
 HTML
 
 ## keyword

@@ -3,7 +3,7 @@ use strict;
 use Shell::Parser;
 
 { no strict;
-  $VERSION = '0.02';
+  $VERSION = '0.03';
   @ISA = qw(Shell::Parser);
 }
 
@@ -13,7 +13,7 @@ Syntax::Highlight::Shell - Highlight shell scripts
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
@@ -43,13 +43,48 @@ my %defaults = (
     use Syntax::Highlight::Shell;
 
     my $highlighter = new Syntax::Highlight::Shell;
-    $output = $highlighter->parse($shellcmd);
+    $output = $highlighter->parse($script);
+
+If C<$script> contains the following shell code: 
+
+    # an if statement
+    if [ -f /etc/passwd ]; then
+        grep $USER /etc/passwd | awk -F: '{print $5}' /etc/passwd
+    fi
+
+then the resulting HTML contained in C<$output> will render like this: 
+
+=begin html
+
+<style type="text/css">
+<!--
+.s-mta,                                           /* shell metacharacters */
+.s-quo,                                           /* quotes               */
+.s-key,                                           /* shell keywords       */
+.s-blt  { color: #993333; font-weight: bold;  }   /* shell builtins commands */
+.s-var  { color: #6633cc;                     }   /* expanded variables   */
+.s-avr  { color: #339999;                     }   /* assigned variables   */
+.s-val  { color: #cc3399;                     }   /* values inside quotes */
+.s-cmt  { color: #338833; font-style: italic; }   /* comment              */
+.s-lno  { color: #aaaaaa; background: #f7f7f7;}   /* line numbers         */
+-->
+</style>
+
+<pre>
+<span class="s-cmt"># an if statement</span>
+<span class="s-key">if</span> [ -f /etc/passwd ]<span class="s-mta">;</span> <span class="s-key">then</span>
+    grep <span class="s-var">$USER</span> /etc/passwd <span class="s-mta">|</span> awk -F: <span class="s-quo">'</span><span class="s-val">{print $5}</span><span class="s-quo">'</span> /etc/passwd
+<span class="s-key">fi</span>
+</pre>
+
+=end html
 
 =head1 DESCRIPTION
 
 This module is designed to take shell scripts and highlight them in HTML 
 with meaningful colours using CSS. The resulting HTML output is ready for 
-inclusion in a web page. 
+inclusion in a web page. Note that no reformating is done, all spaces are 
+preserved. 
 
 =head1 METHODS
 
@@ -57,7 +92,8 @@ inclusion in a web page.
 
 =item new()
 
-The constructor. Returns a C<Syntax::Highlight::Shell> object. 
+The constructor. Returns a C<Syntax::Highlight::Shell> object, which derives 
+from C<Shell::Parser>. 
 
 B<Options>
 
@@ -73,8 +109,9 @@ C<pre> - Surround result by C<< <pre>...</pre> >> tags. Default value: 1 (enable
 
 =item *
 
-C<syntax> - Selects the shell syntax. Check L<Shell::Parser/"syntax"> for more 
-information on the available syntaxes. Default value: C<bourne>. 
+C<syntax> - Selects the shell syntax. Check the documentation about the 
+C<syntax()> method in C<Shell::Parser> documentation for more information 
+on the available syntaxes. Default value: C<bourne>. 
 
 =item *
 
@@ -151,12 +188,17 @@ sub parse {
     return $self->{_shs_output}
 }
 
+=back
+
+=head2 Internal Methods
+
+The following methods are for internal use only. 
+
+=over 4
+
 =item _generic_highlight()
 
-I<Internal method>
-
-It's the C<Shell::Parser> callback that does all the work of highlighting 
-the code. 
+C<Shell::Parser> callback that does all the work of highlighting the code. 
 
 =cut
 
@@ -196,7 +238,7 @@ that you can define in your stylesheet.
 
 =item *
 
-C<.s-key> - for shell keywords (like C<if>, C<for>, C<while>, C<do>...)
+C<.s-key> - for shell keywords, like C<if>, C<for>, C<while>, C<do>...
 
 =item *
 
@@ -212,7 +254,7 @@ C<.s-arg> - for the command arguments
 
 =item *
 
-C<.s-mta> - for shell metacharacters (C<|>, C<< > >>, C<\>, C<&>)
+C<.s-mta> - for shell metacharacters, like C<|>, C<< > >>, C<\>, C<&>
 
 =item *
 
@@ -240,10 +282,10 @@ An example stylesheet can be found in F<examples/shell-syntax.css>.
 
 =head1 EXAMPLE
 
-Here is an example of generated HTML output. It was generated 
-with the script F<eg/highlight.pl>. 
+Here is an example of generated HTML output. It was generated with the 
+script F<eg/highlight.pl>. 
 
-The following script 
+The following shell script 
 
     #!/bin/sh
     
@@ -265,23 +307,9 @@ The following script
         fi
     esac
 
-will be rendered like this (using the CSS stylesheet F<eg/shell-syntax.css>)
+will be rendered like this (using the CSS stylesheet F<eg/shell-syntax.css>): 
 
 =begin html
-
-<style type="text/css">
-<!--
-.s-mta,                                           /* shell metacharacters */
-.s-quo,                                           /* quotes               */
-.s-key,                                           /* shell keywords       */
-.s-blt  { color: #993333; font-weight: bold;  }   /* shell builtins commands */
-.s-var  { color: #6633cc;                     }   /* expanded variables   */
-.s-avr  { color: #339999;                     }   /* assigned variables   */
-.s-val  { color: #cc3399;                     }   /* values inside quotes */
-.s-cmt  { color: #338833; font-style: italic; }   /* comment              */
-.s-lno  { color: #aaaaaa; background: #f7f7f7;}   /* line numbers         */
--->
-</style>
 
 <pre>
 <span class="s-lno">  1</span> <span class="s-cmt">#!/bin/sh</span>
@@ -307,24 +335,29 @@ will be rendered like this (using the CSS stylesheet F<eg/shell-syntax.css>)
 
 =end html
 
+=head1 CAVEATS
+
+C<Syntax::Highlight::Shell> relies on C<Shell::Parser> for parsing the shell 
+code and therefore suffers from the same limitations. 
+
 =head1 SEE ALSO
 
 L<Shell::Parser>
 
 =head1 AUTHOR
 
-Sébastien Aperghis-Tramoni, C<< <sebastien@aperghis.net> >>
+SE<eacute>bastien Aperghis-Tramoni, E<lt>sebastien@aperghis.netE<gt>
 
 =head1 BUGS
 
 Please report any bugs or feature requests to
 C<bug-syntax-highlight-shell@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.  I will be notified, and then you'll automatically
+L<https://rt.cpan.org/>.  I will be notified, and then you'll automatically
 be notified of progress on your bug as I make changes.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2004 Sébastien Aperghis-Tramoni, All Rights Reserved.
+Copyright 2004 SE<eacute>bastien Aperghis-Tramoni, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
