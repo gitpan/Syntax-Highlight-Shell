@@ -3,7 +3,9 @@ Syntax::Highlight::Shell
 
 DESCRIPTION
 
-    This module
+    This module is designed to take shell scripts and highlight them in HTML 
+    with meaningful colours using CSS. The resulting HTML output is ready for 
+    inclusion in a web page. 
 
 
 INSTALLATION

@@ -8,7 +8,7 @@ WriteMakefile(
     ABSTRACT_FROM       => 'lib/Syntax/Highlight/Shell.pm',
     PL_FILES            => {},
     PREREQ_PM => {
-        'Shell::Parser' => 0,
+        'Shell::Parser' => '0.02',
         'Test::More' => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

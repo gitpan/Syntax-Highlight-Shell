@@ -1,5 +1,10 @@
 Revision history for Syntax-Highlight-Shell
 
-0.01    Date/time
+0.02    2004.10.16
+        RT#7982 (Allen Day): Example does not work   => see RT#7981
+        RT#7983 (Allen Day): <pre></pre> output even when disabled
+        Corrected and improved the documentation. 
+
+0.01    2004.10.11
         First version, released on an unsuspecting world.
 

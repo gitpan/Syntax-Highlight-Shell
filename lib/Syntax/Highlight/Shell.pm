@@ -3,17 +3,17 @@ use strict;
 use Shell::Parser;
 
 { no strict;
-  $VERSION = '0.01';
+  $VERSION = '0.02';
   @ISA = qw(Shell::Parser);
 }
 
 =head1 NAME
 
-Syntax::Highlight::Shell - Highlight shell commands
+Syntax::Highlight::Shell - Highlight shell scripts
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
@@ -47,8 +47,9 @@ my %defaults = (
 
 =head1 DESCRIPTION
 
-This module is designed to take some text (assumed to be a shell command) 
-and highlight it with meaningful colours. 
+This module is designed to take shell scripts and highlight them in HTML 
+with meaningful colours using CSS. The resulting HTML output is ready for 
+inclusion in a web page. 
 
 =head1 METHODS
 
@@ -100,7 +101,7 @@ sub new {
     $self->{_shs_options} = { %defaults };
     my %args = @_;
     for my $arg (keys %defaults) {
-        $self->{_shs_options}{$arg} = $args{$arg} if $args{$arg}
+        $self->{_shs_options}{$arg} = $args{$arg} if defined $args{$arg}
     }
     
     $self->syntax($self->{_shs_options}{syntax});
@@ -236,6 +237,79 @@ C<.s-cmt> - for shell comments
 =back
 
 An example stylesheet can be found in F<examples/shell-syntax.css>.
+
+=head1 EXAMPLE
+
+Here is an example of generated HTML output. It was generated 
+with the script F<eg/highlight.pl>. 
+
+The following script 
+
+    #!/bin/sh
+    
+    user="$1"
+    
+    case "$user" in
+      # check if the user is root
+      'root')
+        echo "You are the BOFH."
+        ;;
+    
+      # for normal users, grep throught /etc/passwd
+      *)
+        passwd=/etc/passwd
+        if [ -f $passwd ]; then 
+            grep "$user" $passwd | awk -F: '{print $5}'
+        else
+            echo "No $passwd"
+        fi
+    esac
+
+will be rendered like this (using the CSS stylesheet F<eg/shell-syntax.css>)
+
+=begin html
+
+<style type="text/css">
+<!--
+.s-mta,                                           /* shell metacharacters */
+.s-quo,                                           /* quotes               */
+.s-key,                                           /* shell keywords       */
+.s-blt  { color: #993333; font-weight: bold;  }   /* shell builtins commands */
+.s-var  { color: #6633cc;                     }   /* expanded variables   */
+.s-avr  { color: #339999;                     }   /* assigned variables   */
+.s-val  { color: #cc3399;                     }   /* values inside quotes */
+.s-cmt  { color: #338833; font-style: italic; }   /* comment              */
+.s-lno  { color: #aaaaaa; background: #f7f7f7;}   /* line numbers         */
+-->
+</style>
+
+<pre>
+<span class="s-lno">  1</span> <span class="s-cmt">#!/bin/sh</span>
+<span class="s-lno">  2</span> 
+<span class="s-lno">  3</span> <span class="s-avr">user</span>=<span class="s-val">"$1"</span>
+<span class="s-lno">  4</span> 
+<span class="s-lno">  5</span> <span class="s-key">case</span> <span class="s-quo">"</span><span class="s-val">$user</span><span class="s-quo">"</span> <span class="s-key">in</span>
+<span class="s-lno">  6</span>   <span class="s-cmt"># check if the user is root</span>
+<span class="s-lno">  7</span>   <span class="s-quo">'</span><span class="s-val">root</span><span class="s-quo">'</span><span class="s-mta">)</span>
+<span class="s-lno">  8</span>     echo <span class="s-quo">"</span><span class="s-val">You are the BOFH.</span><span class="s-quo">"</span>
+<span class="s-lno">  9</span>     <span class="s-mta">;</span><span class="s-mta">;</span>
+<span class="s-lno"> 10</span> 
+<span class="s-lno"> 11</span>   <span class="s-cmt"># for normal users, grep throught /etc/passwd</span>
+<span class="s-lno"> 12</span>   *<span class="s-mta">)</span>
+<span class="s-lno"> 13</span>     <span class="s-avr">passwd</span>=<span class="s-val">/etc/passwd</span>
+<span class="s-lno"> 14</span>     <span class="s-key">if</span> [ -f <span class="s-var">$passwd</span> ]<span class="s-mta">;</span> <span class="s-key">then</span> 
+<span class="s-lno"> 15</span>         grep <span class="s-quo">"</span><span class="s-val">$user</span><span class="s-quo">"</span> <span class="s-var">$passwd</span> <span class="s-mta">|</span> awk -F: <span class="s-quo">'</span><span class="s-val">{print $5}</span><span class="s-quo">'</span>
+<span class="s-lno"> 16</span>     <span class="s-key">else</span>
+<span class="s-lno"> 17</span>         echo <span class="s-quo">"</span><span class="s-val">No $passwd</span><span class="s-quo">"</span>
+<span class="s-lno"> 18</span>     <span class="s-key">fi</span>
+<span class="s-lno"> 19</span> <span class="s-key">esac</span>
+</pre>
+
+=end html
+
+=head1 SEE ALSO
+
+L<Shell::Parser>
 
 =head1 AUTHOR
 
