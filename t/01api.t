@@ -4,9 +4,9 @@ BEGIN { plan tests => 11 }
 use Syntax::Highlight::Shell;
 
 # check that the following functions are available
-ok( defined \&Syntax::Highlight::Shell::new            ); #01
-ok( defined \&Syntax::Highlight::Shell::parse          ); #02
-ok( defined \&Syntax::Highlight::Shell::_generic_highlight ); #03
+ok( exists &Syntax::Highlight::Shell::new              ); #01
+ok( exists &Syntax::Highlight::Shell::parse            ); #02
+ok( exists &Syntax::Highlight::Shell::_generic_highlight ); #03
 
 # create an object
 my $highlighter = undef;

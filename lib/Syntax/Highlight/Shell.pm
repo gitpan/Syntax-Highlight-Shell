@@ -3,7 +3,7 @@ use strict;
 use Shell::Parser;
 
 { no strict;
-  $VERSION = '0.03';
+  $VERSION = '0.04';
   @ISA = qw(Shell::Parser);
 }
 
@@ -13,7 +13,7 @@ Syntax::Highlight::Shell - Highlight shell scripts
 
 =head1 VERSION
 
-Version 0.03
+Version 0.04
 
 =cut
 
@@ -352,8 +352,9 @@ SE<eacute>bastien Aperghis-Tramoni, E<lt>sebastien@aperghis.netE<gt>
 
 Please report any bugs or feature requests to
 C<bug-syntax-highlight-shell@rt.cpan.org>, or through the web interface at
-L<https://rt.cpan.org/>.  I will be notified, and then you'll automatically
-be notified of progress on your bug as I make changes.
+L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Syntax-Highlight-Shell>. 
+I will be notified, and then you'll automatically be notified of 
+progress on your bug as I make changes.
 
 =head1 COPYRIGHT & LICENSE
 

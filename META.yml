@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Syntax-Highlight-Shell
-version: 0.03
+version: 0.04
 author:
   - |-
     Sébastien Aperghis-Tramoni <sebastien@aperghis.net>
@@ -12,5 +12,5 @@ requires:
 provides:
   Syntax::Highlight::Shell:
     file: lib/Syntax/Highlight/Shell.pm
-    version: 0.03
-generated_by: Module::Build version 0.26
+    version: 0.04
+generated_by: Module::Build version 0.2607

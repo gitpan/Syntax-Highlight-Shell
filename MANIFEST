@@ -9,6 +9,7 @@ LICENSE.Artistic
 LICENSE.GPL
 lib/Syntax/Highlight/Shell.pm
 t/00load.t
+t/00prereq.t
 t/01api.t
 t/10highlight.t
 t/distchk.t
